@@ -96,7 +96,6 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     if(doBounce){
         velocityX = -velocityX/1.1;
     }
-    
 }
 
 void Player::draw(sf::RenderWindow &window)

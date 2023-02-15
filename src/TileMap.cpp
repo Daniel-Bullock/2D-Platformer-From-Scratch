@@ -59,8 +59,17 @@ sf::Vector2<bool> TileMap::collisions(sf::FloatRect boundsX, sf::FloatRect bound
 
 void TileMap::draw(sf::RenderWindow &window)
 {
+
+    // instead of 0 and mapheight have input that changes it
+
+    
+
+    //std::cout<<yDiff <<'\n';
+    
+    //for (int x = 0; x < mapHeight; x++)
     for (int x = 0; x < mapHeight; x++)
         {
+            //for (int y = 0; y < mapWidth; y++)
             for (int y = 0; y < mapWidth; y++)
             {
                 int tileNumber = tilemap[x][y];
