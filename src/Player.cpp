@@ -8,7 +8,7 @@
 Player::Player()
 {
     // load the player texture
-    if (!playerTexture.loadFromFile("Textures/Player/playertest3.png"))
+    if (!playerTexture.loadFromFile("Textures/Player/slimetest1.png"))
     {
         return;
     }
@@ -36,7 +36,7 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && jumpTimer <= jumpDuration)
         {
-            velocityY = -0.2;
+            velocityY = initialVelocityY;
             jumpTimer +=1;
         }else
         {
@@ -48,6 +48,7 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     {   
         if(isFalling){
             velocityY += gravity;
+            velocityY = std::max(velocityY, maxVelocityY);
         }
     }
 

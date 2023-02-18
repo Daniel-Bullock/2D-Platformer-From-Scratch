@@ -10,7 +10,7 @@ TileMap::TileMap(int MAP_WIDTH, int MAP_HEIGHT, int TILE_SIZE){
     mapHeight = MAP_HEIGHT;
     mapWidth = MAP_WIDTH;
     
-    if (!tileset.loadFromFile("Textures/Tiles/tileset.png")){
+    if (!tileset.loadFromFile("Textures/Tiles/tileset16.png")){
         std::cout<<"Couldn't load tileset";
     }
     

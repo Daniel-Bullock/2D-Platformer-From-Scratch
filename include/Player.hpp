@@ -18,12 +18,12 @@ public:
 
     void setPosition(sf::Vector2f pos);
 
-    const float gravity = 0.0003f;
-    const float maxVelocityY = -0.25f;
-    const float initialVelocityY = -0.2;
+    const float gravity = 0.0003f/2;
+    const float maxVelocityY = 0.35;
+    const float initialVelocityY = -0.2/2;
 
-    const float accelerationX = 0.0001f;
-    const float maxVelocityX = 0.2f;
+    const float accelerationX = 0.0001f/2;
+    const float maxVelocityX = 0.2f/2;
 
     float velocityY = 0.0f; 
     float velocityX = 0.0f;
