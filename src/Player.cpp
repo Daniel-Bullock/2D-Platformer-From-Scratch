@@ -48,7 +48,7 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     {   
         if(isFalling){
             velocityY += gravity;
-            velocityY = std::max(velocityY, maxVelocityY);
+            velocityY = std::min(velocityY, maxVelocityY);
         }
     }
 
