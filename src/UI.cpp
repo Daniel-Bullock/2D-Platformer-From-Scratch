@@ -8,15 +8,15 @@
 #include "Player.hpp"
 #include "TileMap.hpp"
 #include "UI.hpp"
-
+#include <Global.hpp>
 
 float lerpFactor = 0.0005f;
 
 int topOfMapView = 180; 
-int bottomOfMapView = 265;
+int bottomOfMapView = MAP_HEIGHT*TILE_SIZE - 180;
 
-int topPixels = 64;
-int bottomPixels = 831;
+int topPixels = TILE_SIZE * 2;
+int bottomPixels = MAP_HEIGHT*TILE_SIZE - TILE_SIZE*2;
 
 
 std::string getPercentText(float currY){

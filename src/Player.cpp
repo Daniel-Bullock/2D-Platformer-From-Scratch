@@ -8,7 +8,7 @@
 Player::Player()
 {
     // load the player texture
-    if (!playerTexture.loadFromFile("Textures/Player/slimetest1.png"))
+    if (!playerTexture.loadFromFile("Textures/Player/player16bit.png"))
     {
         return;
     }

@@ -1,11 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream> 
-#include "TileMap.hpp"
 #include <math.h>
 
+#include "TileMap.hpp"
+#include <Global.hpp>
+#include <Enemy.hpp>
 
-TileMap::TileMap(int MAP_WIDTH, int MAP_HEIGHT, int TILE_SIZE){
+TileMap::TileMap(int MAP_WIDTH, int MAP_HEIGHT, int TILE_SIZE, std::vector<Enemy> &enemies){
     tileSize = TILE_SIZE;
     mapHeight = MAP_HEIGHT;
     mapWidth = MAP_WIDTH;
@@ -23,22 +25,31 @@ TileMap::TileMap(int MAP_WIDTH, int MAP_HEIGHT, int TILE_SIZE){
     }   
 
     //create collision boxes for tiles
-    //std::vector<std::vector<sf::FloatRect> > tileBoundstemp(23);  
-    std::vector<std::vector<sf::FloatRect> > tileBoundstemp(28);      
+    std::vector<std::vector<sf::FloatRect> > tileBoundstemp(MAP_HEIGHT); 
+
+    //std::vector<Enemy> enemiesTemp;     
+
 
     for (int i = 0; i < mapHeight; i++)
     {
-        tileBoundstemp[i].resize(40);
+        tileBoundstemp[i].resize(MAP_WIDTH);
         for (int j = 0; j < mapWidth; j++)
         {
-            if(tilemap[i][j] == 1)
+            if(tilemap[i][j] == 1) 
             {
                 tileBoundstemp[i][j] = sf::FloatRect(j * tileSize, i * tileSize, tileSize, tileSize);
             }
+            else if(tilemap[i][j] == 9)
+            {
+                //make new enemy at this location and add to list of enemies
+                //enemies.push_back(Enemy(j * tileSize,i * tileSize, 0.016, enemyTexture, tileSize));
+                //enemiesTemp.push_back(Enemy(j * tileSize,i * tileSize, 0.016, enemyTexture, tileSize));
+                enemies.push_back(Enemy(j * tileSize,i * tileSize, 0.016, tileSize));
+            }
         }
     }
-
     tileBounds = tileBoundstemp;
+    //enemies = enemiesTemp;
 }
 
 sf::Vector2<bool> TileMap::collisions(sf::FloatRect boundsX, sf::FloatRect boundsY){
@@ -57,27 +68,44 @@ sf::Vector2<bool> TileMap::collisions(sf::FloatRect boundsX, sf::FloatRect bound
     return collider;
 }
 
-void TileMap::draw(sf::RenderWindow &window)
-{
-
-    // instead of 0 and mapheight have input that changes it
-
-    
-
-    //std::cout<<yDiff <<'\n';
-    
-    //for (int x = 0; x < mapHeight; x++)
-    for (int x = 0; x < mapHeight; x++)
+void TileMap::draw(sf::RenderWindow &window, sf::View &view)
+{   
+    int topIdx = std::max(int((view.getCenter().y - 180)/16), 0);
+    int bottomIdx = std::min(int((view.getCenter().y + 180)/16) + 1, MAP_HEIGHT);
+    for (int x = topIdx; x < bottomIdx; x++)
+    {
+        for (int y = 0; y < mapWidth; y++)
         {
-            //for (int y = 0; y < mapWidth; y++)
-            for (int y = 0; y < mapWidth; y++)
-            {
-                int tileNumber = tilemap[x][y];
+            int tileNumber = tilemap[x][y];
+            if(tileNumber == 1){
+                window.draw(tiles[tileNumber]);
                 window.draw(tiles[tileNumber]);
                 tiles[tileNumber].setPosition(y * tileSize, x * tileSize);
             }
+            
         }
+    }
 }
 
+/*
+void TileMap::updateEnemies(sf::View &view, std::vector<std::vector<Enemy>> &enemies){
+    int topIdx = std::max(int((view.getCenter().y - 180)/16), 0);
+    int bottomIdx = std::min(int((view.getCenter().y + 180)/16) + 1, MAP_HEIGHT);
+
+    for (int x = topIdx; x < bottomIdx; x++)
+    {
+        for (int y = 0; y < mapWidth; y++)
+        {
+            if (tilemap[x][y] ==  9)
+            {
+                
+                Enemy currEnemy = enemies[x][y];
+                //std::cout<<currEnemy.getPos().x<<"\n";
+                //std::cout<<currEnemy.position<<"\n";
+                currEnemy.update(tilemap, TILE_SIZE);
+            }
+        }
+    }
+}*/
 
 
