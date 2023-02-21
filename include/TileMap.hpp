@@ -13,7 +13,8 @@ public:
     
     std::vector<std::vector<sf::FloatRect> > tileBounds;
 
-    sf::Vector2<bool> collisions(sf::FloatRect boundsX, sf::FloatRect boundsY);
+    sf::Vector2<bool> collisionsXY(sf::FloatRect boundsX, sf::FloatRect boundsY);
+    bool collisions(sf::FloatRect bounds);
 
     void draw(sf::RenderWindow &window, sf::View &view);
 

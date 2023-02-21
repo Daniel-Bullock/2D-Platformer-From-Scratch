@@ -26,7 +26,7 @@ Player::Player()
     playerSprite.setPosition(50, 64);
 }
 
-void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy> enemies)
+void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy>& enemies)
 {
     //Jumping
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
@@ -80,7 +80,7 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy>
     playerBoundsX.left += velocityX;
     playerBoundsY.top += velocityY;
     
-    sf::Vector2<bool> collider = tiles.collisions(playerBoundsX,playerBoundsY);
+    sf::Vector2<bool> collider = tiles.collisionsXY(playerBoundsX,playerBoundsY);
 
     isFalling = true; //assume player is falling, if it's on ground, then set it to not falling
     doBounce = false;  //bouncing off walls
@@ -122,23 +122,29 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy>
     if (isOrbShooting){
         orbVx = orbVx * airResistance;
         orbVy = orbVy + gravityOrb;
-        sf::FloatRect orbBoundsX = orbSprite.getGlobalBounds();
-        sf::FloatRect orbBoundsY = orbSprite.getGlobalBounds();
-        orbBoundsX.left += orbVx;
-        orbBoundsY.top += orbVy;
+        
+        sf::FloatRect orbBounds = orbSprite.getGlobalBounds();
+        orbBounds.left += orbVx;
+        orbBounds.top += orbVy;
 
-        sf::Vector2<bool> orbCollider = tiles.collisions(orbBoundsX, orbBoundsY);
-        if(orbCollider.x == true || orbCollider.y == true){
+        //colliding with tiles
+        bool orbCollider = tiles.collisions(orbBounds);
+        if(orbCollider){
             isOrbShooting = false;
         }
-
-        //collide with enemies
         
-        
+        //colliding with enemies
+        for(int i = 0; i < enemies.size(); i++){
+            if(orbBounds.intersects(enemies[i].sprite.getGlobalBounds())){
+                //delete enemies[i]
+                //How to delete???? idk how to do safely without memory leaks :'(
+                    //vector of smart pointers to enemies??????????????????????????????????????s
+                auto iterator = enemies.begin()+i;
+                enemies.erase(iterator);
 
-        //collide with you
-
-
+                //enemies[i].sprite.setPosition(32,32);
+            }
+        }
         orbSprite.move(orbVx, orbVy);
     }    
 }

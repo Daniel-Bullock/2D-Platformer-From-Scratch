@@ -9,7 +9,7 @@ class Player
 public:
     Player();
 
-    void update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy> enemies);
+    void update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy>& enemies);
     void draw(sf::RenderWindow &window);
     void move();
 

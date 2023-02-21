@@ -44,7 +44,7 @@ TileMap::TileMap(int MAP_WIDTH, int MAP_HEIGHT, int TILE_SIZE, std::vector<Enemy
     tileBounds = tileBoundstemp;
 }
 
-sf::Vector2<bool> TileMap::collisions(sf::FloatRect boundsX, sf::FloatRect boundsY){
+sf::Vector2<bool> TileMap::collisionsXY(sf::FloatRect boundsX, sf::FloatRect boundsY){
     sf::Vector2<bool> collider;
     for(unsigned short a = std::max<short>(0,floor(boundsX.left/tileSize)); a <= std::min<short>(floor((ceil(boundsX.left + boundsX.width)-1)/tileSize),tileSize*mapWidth); a++){
         for(unsigned short b = std::max<short>(0,floor(boundsY.top/tileSize)); b <= std::min<short>(floor((ceil(boundsY.top + boundsY.height)-1)/tileSize),tileSize*mapHeight); b++){
@@ -58,6 +58,19 @@ sf::Vector2<bool> TileMap::collisions(sf::FloatRect boundsX, sf::FloatRect bound
         }
     }
     return collider;
+}
+
+bool TileMap::collisions(sf::FloatRect bounds){
+    sf::Vector2<bool> collider;
+    for(unsigned short a = std::max<short>(0,floor(bounds.left/tileSize)); a <= std::min<short>(floor((ceil(bounds.left + bounds.width)-1)/tileSize),tileSize*mapWidth); a++){
+        for(unsigned short b = std::max<short>(0,floor(bounds.top/tileSize)); b <= std::min<short>(floor((ceil(bounds.top + bounds.height)-1)/tileSize),tileSize*mapHeight); b++){
+            sf::FloatRect tilebound = tileBounds[b][a];
+            if (bounds.intersects(tilebound)){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void TileMap::draw(sf::RenderWindow &window, sf::View &view)
