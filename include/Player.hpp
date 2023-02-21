@@ -9,11 +9,11 @@ class Player
 public:
     Player();
 
-    void update(sf::RenderWindow &window, TileMap& tiles);
+    void update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy> enemies);
     void draw(sf::RenderWindow &window);
     void move();
 
-    void shootOrb(sf::RenderWindow& window, TileMap& tiles);
+    void shootOrb(sf::RenderWindow& window, TileMap& tiles, float duration);
     void drawOrb(sf::RenderWindow &window);
 
     sf::Vector2f getPosition();
@@ -36,14 +36,19 @@ public:
     bool jumpReleased = true; //check if W has been released to prevent holding W and instant jumping
 
     int jumpTimer = 0;
-    int jumpDuration = 800;
+    const int jumpDuration = 800;
 
     bool doBounce = false;  //bouncing off walls
 
-    float orbSpeed = 0.11f;
-    float timeBetweenShooting = 0.8;
+    const float minOrbSpeed = 0.03f;
+    const float maxOrbSpeed = 0.1f;
+    const float maxHoldTime = 0.4;
+    const float timeBetweenShooting = 0.4;
     bool isOrbShooting = false;
     bool allowShooting = true;
+    bool isMouseClicked = false;
+    const float gravityOrb = 0.0003f/10; // set a constant acceleration due to gravity in pixels per second^2
+    const float airResistance = 0.9999f; // set a constant for air resistance
 
 private:
     sf::Texture playerTexture;
@@ -55,6 +60,7 @@ private:
     float orbVy;
 
     sf::Clock shotClock;
+    sf::Clock shootingTimer;
 };
 
 

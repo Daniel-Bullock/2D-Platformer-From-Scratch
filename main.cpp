@@ -78,7 +78,7 @@ int main()
                     view = getLetterboxView( view, event.size.width, event.size.height );
             }
 
-            player.update(window, tiles);
+            player.update(window, tiles, enemies);
             player.move();
             
             view.setCenter(view.getCenter().x, linearInterpolation(player, view));

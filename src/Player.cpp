@@ -26,7 +26,7 @@ Player::Player()
     playerSprite.setPosition(50, 64);
 }
 
-void Player::update(sf::RenderWindow &window, TileMap& tiles)
+void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy> enemies)
 {
     //Jumping
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
@@ -105,26 +105,45 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
         velocityX = -velocityX/1.1;
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isOrbShooting)
+
+    //Handle orb shooting
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isOrbShooting && !isMouseClicked)
     { 
-        shootOrb(window, tiles);
+        isMouseClicked = true;
+        shootingTimer.restart();
+    }
+
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseClicked) {
+        float duration = std::min(shootingTimer.getElapsedTime().asSeconds(), maxHoldTime);
+        isMouseClicked = false;
+        shootOrb(window, tiles, duration);
     }
 
     if (isOrbShooting){
+        orbVx = orbVx * airResistance;
+        orbVy = orbVy + gravityOrb;
         sf::FloatRect orbBoundsX = orbSprite.getGlobalBounds();
         sf::FloatRect orbBoundsY = orbSprite.getGlobalBounds();
         orbBoundsX.left += orbVx;
         orbBoundsY.top += orbVy;
-        
+
         sf::Vector2<bool> orbCollider = tiles.collisions(orbBoundsX, orbBoundsY);
         if(orbCollider.x == true || orbCollider.y == true){
             isOrbShooting = false;
         }
+
+        //collide with enemies
+        
+        
+
+        //collide with you
+
+
         orbSprite.move(orbVx, orbVy);
     }    
 }
 
-void Player::shootOrb(sf::RenderWindow& window, TileMap& tiles)
+void Player::shootOrb(sf::RenderWindow& window, TileMap& tiles, float duration)
 {
     if (!allowShooting && shotClock.getElapsedTime().asSeconds() > timeBetweenShooting) {
         allowShooting = true;
@@ -135,16 +154,14 @@ void Player::shootOrb(sf::RenderWindow& window, TileMap& tiles)
 
         // calculate the direction from the player's position to the mouse position
         sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        float initialSpeed = minOrbSpeed + (maxOrbSpeed - minOrbSpeed) * (duration / maxHoldTime);
 
         float dx = mousePosition.x - (playerSprite.getPosition().x + playerSprite.getGlobalBounds().width/2);
         float dy = mousePosition.y - (playerSprite.getPosition().y + playerSprite.getGlobalBounds().height/2);
         float angle = atan2(dy,dx);
-        //std::cout<<angle<<'\n';
-
-        // set the initial velocity of the orb in the calculated direction
         
-        orbVx = cos(angle) * orbSpeed;
-        orbVy = sin(angle) * orbSpeed;
+        orbVx = cos(angle) * initialSpeed;
+        orbVy = sin(angle) * initialSpeed;
 
         isOrbShooting = true;
         allowShooting = false;
