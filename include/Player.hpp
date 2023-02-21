@@ -13,6 +13,9 @@ public:
     void draw(sf::RenderWindow &window);
     void move();
 
+    void shootOrb(sf::RenderWindow& window, TileMap& tiles);
+    void drawOrb(sf::RenderWindow &window);
+
     sf::Vector2f getPosition();
     sf::FloatRect getGlobalBounds();
 
@@ -37,9 +40,21 @@ public:
 
     bool doBounce = false;  //bouncing off walls
 
+    float orbSpeed = 0.11f;
+    float timeBetweenShooting = 0.8;
+    bool isOrbShooting = false;
+    bool allowShooting = true;
+
 private:
     sf::Texture playerTexture;
     sf::Sprite playerSprite;
+    
+    sf::Sprite orbSprite;
+    sf::Texture orbTexture;
+    float orbVx;
+    float orbVy;
+
+    sf::Clock shotClock;
 };
 
 

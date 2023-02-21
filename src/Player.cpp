@@ -3,6 +3,7 @@
 #include <iostream> 
 #include "Player.hpp"
 #include "TileMap.hpp"
+#include <math.h>
 
 
 Player::Player()
@@ -12,6 +13,12 @@ Player::Player()
     {
         return;
     }
+
+    if (!orbTexture.loadFromFile("Textures/Orb/orbtest1.png"))
+    {
+        return;
+    }
+
     // set up the player sprite
     playerSprite.setTexture(playerTexture);
 
@@ -22,11 +29,11 @@ Player::Player()
 void Player::update(sf::RenderWindow &window, TileMap& tiles)
 {
     //Jumping
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
         jumpReleased = true;
     }
     //prevents holding jump and instantly rejumping
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !isJumping && !isFalling && jumpReleased) 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !isJumping && !isFalling && jumpReleased) 
     {
         isJumping = true;
         velocityY = initialVelocityY;  //initial velocity
@@ -34,7 +41,7 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     }
     if (isJumping)
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && jumpTimer <= jumpDuration)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && jumpTimer <= jumpDuration)
         {
             velocityY = initialVelocityY;
             jumpTimer +=1;
@@ -97,6 +104,58 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles)
     if(doBounce){
         velocityX = -velocityX/1.1;
     }
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isOrbShooting)
+    { 
+        shootOrb(window, tiles);
+    }
+
+    if (isOrbShooting){
+        sf::FloatRect orbBoundsX = orbSprite.getGlobalBounds();
+        sf::FloatRect orbBoundsY = orbSprite.getGlobalBounds();
+        orbBoundsX.left += orbVx;
+        orbBoundsY.top += orbVy;
+        
+        sf::Vector2<bool> orbCollider = tiles.collisions(orbBoundsX, orbBoundsY);
+        if(orbCollider.x == true || orbCollider.y == true){
+            isOrbShooting = false;
+        }
+        orbSprite.move(orbVx, orbVy);
+    }    
+}
+
+void Player::shootOrb(sf::RenderWindow& window, TileMap& tiles)
+{
+    if (!allowShooting && shotClock.getElapsedTime().asSeconds() > timeBetweenShooting) {
+        allowShooting = true;
+    }
+    if(allowShooting){
+        orbSprite.setTexture(orbTexture);
+        orbSprite.setPosition(playerSprite.getPosition().x + playerSprite.getGlobalBounds().height/2, playerSprite.getPosition().y + playerSprite.getGlobalBounds().width/2);
+
+        // calculate the direction from the player's position to the mouse position
+        sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        float dx = mousePosition.x - (playerSprite.getPosition().x + playerSprite.getGlobalBounds().width/2);
+        float dy = mousePosition.y - (playerSprite.getPosition().y + playerSprite.getGlobalBounds().height/2);
+        float angle = atan2(dy,dx);
+        //std::cout<<angle<<'\n';
+
+        // set the initial velocity of the orb in the calculated direction
+        
+        orbVx = cos(angle) * orbSpeed;
+        orbVy = sin(angle) * orbSpeed;
+
+        isOrbShooting = true;
+        allowShooting = false;
+
+        shotClock.restart();
+    }
+}
+
+void Player:: drawOrb(sf::RenderWindow &window)
+{
+    window.draw(orbSprite);
 }
 
 void Player::draw(sf::RenderWindow &window)

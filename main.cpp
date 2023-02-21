@@ -104,6 +104,10 @@ int main()
                 
                 window.setView(view);
 
+                if(player.isOrbShooting){
+                    player.drawOrb(window);
+                }
+
                 player.draw(window);
                 
                 tiles.draw(window, view); 
@@ -115,7 +119,7 @@ int main()
                         enemies[i].draw(window);
                     }
                 }
-
+                
                 percentText.setPosition(view.getCenter().x - 320,view.getCenter().y - 180);
                 window.draw(percentText);
 
