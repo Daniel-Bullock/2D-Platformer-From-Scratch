@@ -5,8 +5,6 @@
 
 class Enemy {
     public:
-        //Enemy();
-        //Enemy(float x_, float y_, float speed, sf::Texture& texture_, int tileSize);
         Enemy(float x_, float y_, float speed, int tileSize);
 
         sf::Vector2f getPos();

@@ -18,9 +18,6 @@ public:
     void draw(sf::RenderWindow &window, sf::View &view);
 
 
-    //void updateEnemies(sf::View &view, std::vector<std::vector<Enemy>> &enemies);
-
-
     std::vector<std::vector<int>> tilemap = 
     {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},

@@ -31,39 +31,8 @@ int main()
     Player player = Player();
 
     std::vector<Enemy> enemies;
-    sf::Texture enemyTexture; //load texture for enemies
-    enemyTexture.loadFromFile("Textures/Player/slimetest1.png");
 
-    //Enemy enemyTest = Enemy(2 * TILE_SIZE,2 * TILE_SIZE, 0.016, enemyTexture, TILE_SIZE);
-    
-    //enemies.push_back(Enemy(7 * TILE_SIZE,5 * TILE_SIZE, 0.016, enemyTexture, TILE_SIZE));
-
-    for (Enemy currEnemy: enemies)
-    {
-        std::cout<<currEnemy.x<<' '<<currEnemy.y<<" "<< currEnemy.getPos().x<<"\n";
-    }
-    std::cout<<"ASDASD\n";
     TileMap tiles = TileMap(MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, enemies);
-
-
-    /*
-    for (int i = 0; i < MAP_HEIGHT; i++)
-    {
-        for (int j = 0; j < MAP_WIDTH; j++)
-        {
-            if(tiles.tilemap[i][j] == 9)
-            {
-                //make new enemy at this location and add to list of enemies
-                enemies.push_back(Enemy(j * TILE_SIZE,i * TILE_SIZE, 0.016, enemyTexture, TILE_SIZE));
-                //enemies.push_back(Enemy(j * tileSize,i * tileSize, 0.016, tileSize));
-            }
-        }
-    }*/
-
-    for (Enemy currEnemy: enemies)
-    {
-        std::cout<<currEnemy.x<<' '<<currEnemy.y<<" "<< currEnemy.getPos().x<<"\n";
-    }
     
     sf::Font font;
     if (!font.loadFromFile("Textures/fibberish.ttf"))
@@ -114,14 +83,8 @@ int main()
             
             view.setCenter(view.getCenter().x, linearInterpolation(player, view));
             
-
-            //std::cout<<"here3\n";
-            //print out
-            
             int topIdx = std::max(int((view.getCenter().y - 180)/16), 0);
             int bottomIdx = std::min(int((view.getCenter().y + 180)/16) + 1, MAP_HEIGHT);
-            //std::cout<<enemies[0].y<<" ";
-            //for (Enemy currEnemy: enemies)
             for (int i = 0; i < enemies.size(); i++)
             {
                 if (int(enemies[i].y/TILE_SIZE) >= topIdx && int(enemies[i].y/TILE_SIZE) < bottomIdx)
@@ -133,6 +96,7 @@ int main()
             percentText.setString(getPercentText(player.getPosition().y));
 
             timeText.setString(getTimeText(timeElapsed));
+
             //Frames are independent of fps; now draw on screen
             if (FRAME_DURATION > lag)
 			{
@@ -143,34 +107,14 @@ int main()
                 player.draw(window);
                 
                 tiles.draw(window, view); 
-                
-                /*for (Enemy currEnemy: enemies)
-                {
-                    //if (int(currEnemy.y/TILE_SIZE) >= topIdx && int(currEnemy.y/TILE_SIZE) < bottomIdx)
-                    //{
-                    currEnemy.draw(window);
-                    //}
-                }*/
+
                 for (int i = 0; i < enemies.size(); i++)
                 {
                     if (int(enemies[i].y/TILE_SIZE) >= topIdx && int(enemies[i].y/TILE_SIZE) < bottomIdx)
                     {
                         enemies[i].draw(window);
                     }
-                    
-                    //std::cout<<currEnemy.x<<"\n";
                 }
-                /*
-                for (int x = 0; x < enemies.size(); x++)
-                {
-                    //if (currEnemy.y >= topIdx && currEnemy.y <= bottomIdx)
-                    //{
-                    //std::cout<<"here7\n";
-                    //enemies[x].draw(window);
-                    //}
-                }
-                */
-                //enemyTest.draw(window);
 
                 percentText.setPosition(view.getCenter().x - 320,view.getCenter().y - 180);
                 window.draw(percentText);
