@@ -15,6 +15,7 @@ const int WINDOW_HEIGHT = 360;
 
 
 //Frame duration for ensuring frame independence
+//constexpr std::chrono::microseconds FRAME_DURATION(300);
 constexpr std::chrono::microseconds FRAME_DURATION(300);
 
 #endif

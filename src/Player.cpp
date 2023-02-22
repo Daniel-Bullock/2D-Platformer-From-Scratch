@@ -136,13 +136,13 @@ void Player::update(sf::RenderWindow &window, TileMap& tiles, std::vector<Enemy>
         //colliding with enemies
         for(int i = 0; i < enemies.size(); i++){
             if(orbBounds.intersects(enemies[i].sprite.getGlobalBounds())){
-                //delete enemies[i]
                 //How to delete???? idk how to do safely without memory leaks :'(
                     //vector of smart pointers to enemies??????????????????????????????????????s
+
+
+                    
                 auto iterator = enemies.begin()+i;
                 enemies.erase(iterator);
-
-                //enemies[i].sprite.setPosition(32,32);
             }
         }
         orbSprite.move(orbVx, orbVy);
